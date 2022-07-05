@@ -1,0 +1,17 @@
+{
+    "name": "saphira/connectdb",
+    "description": "PHP Package that allows you to connect to database and exec some querys with functions",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Saphira\\Connectdb\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "alexandrehdev"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

@@ -5,16 +5,18 @@ class Enviroment
 {
 
 	public static function load($dir){
-    $pathEnv =  "/vendor/masterbase/connectdb/.env";
+    $pathEnv =  "/vendor/saphira/connectdb/.env";
 
-    for($v = 1; $v <= 20; $v++){
-      $rootFolder = (dirname($dir, $v) == $_SERVER['DOCUMENT_ROOT']) ? dirname($dir, $v) : null;
-      $lines = (file_exists($rootFolder . $pathEnv)) ? file($rootFolder . $pathEnv): null;
-      if($lines){
-        foreach($lines as $line){
+    for($x = 1; $x <= 20; $x++){
+      if(dirname($dir,$x) == dirname(getcwd(),1)){
+        $rootFolder = dirname($dir,$x);
+        $lines = (file_exists($rootFolder . $pathEnv)) ? file($rootFolder . $pathEnv) : null;
+          foreach($lines as $line){
             putenv(trim($line));
-        }
+          }
         return ".env file 200";
+
+        continue;
       }
     }
 

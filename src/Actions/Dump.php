@@ -1,6 +1,5 @@
 <?php
 	namespace Saphira\Connectdb\Actions;
-	use Saphira\Connectdb\Connect\Connection;
 
 	class Dump
 	{

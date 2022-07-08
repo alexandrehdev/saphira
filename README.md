@@ -22,7 +22,7 @@ For example, If you would like to get all the data from your table
 
 If you have composer installed, all you gotta do is run the command above:
 
-`composer require saphira/connectdb:dev-master`
+`composer require saphira/connectdb:v0.1-alpha`
 
 
 

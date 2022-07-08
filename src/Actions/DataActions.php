@@ -1,7 +1,7 @@
 <?php
 	namespace Saphira\Connectdb\Actions;
   use Saphira\Connectdb\Connect\Connection;
-	use PDO;
+  use PDO;
 
 	class DataActions
 	{
@@ -21,8 +21,9 @@
       $stmt = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $response = ($row == null) ? "no records found" : $row;
 
-      return $row;
+      return $response;  
     }
 
     public static function insertValues(string $table,array $cols, array $vals) :string{
@@ -38,7 +39,7 @@
       return $response;
     }
 
-    public static function updateValues(string $table, array $cols, array $vals, array $cond){
+    public static function updateValues(string $table, array $cols, array $vals, array $cond) :string{
       $vals = array_map(function($item){
          return "--$item--";
       },$vals);
@@ -58,7 +59,7 @@
       return $response;
      }
 
-     public static function deleteValues(string $table, array $cond){
+     public static function deleteValues(string $table, array $cond) :string{
       $condition = $cond[0] . " = " . "'$cond[1]'";
       $connection = self::getConnection();
       $con = $connection->getCon();

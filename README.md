@@ -15,3 +15,17 @@ For example, If you would like to get all the data from your table
 
 `DataActions::selectAll("table_name");`
 
+
+# Installation Requirements
+
+- Composer
+
+If you have composer installed, all you gotta do is run the command above:
+
+`composer require saphira/connectdb:dev-master`
+
+
+
+
+
+

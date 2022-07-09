@@ -10,10 +10,14 @@ class Enviroment
     for($x = 1; $x <= 20; $x++){
       if(dirname($dir,$x) == dirname(getcwd(),1)){
         $rootFolder = dirname($dir,$x);
-        $lines = (file_exists($rootFolder . $pathEnv)) ? file($rootFolder . $pathEnv) : null;
+        $lines      = (file_exists($rootFolder . $pathEnv)) ? file($rootFolder . $pathEnv) : null;
+
           foreach($lines as $line){
+            
             putenv(trim($line));
+
           }
+
         return ".env file 200";
 
         continue;

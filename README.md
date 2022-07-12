@@ -16,7 +16,7 @@ For example, If you would like to get all the data from your table
 `DataActions::selectAll("table_name");`
 
 
-# Installation Requirements
+# Installation 
 
 - Composer
 

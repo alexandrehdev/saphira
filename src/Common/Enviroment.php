@@ -8,7 +8,7 @@ class Enviroment
         $rootFolder = $_SERVER["DOCUMENT_ROOT"];
         $pathEnv =  "/vendor/saphira/connectdb/.env";
 
-        for($x = 1; $x <= 20; $x++){
+        for($x = 1; $x <= 30; $x++){
             if($rootFolder == dirname($dir,$x)){
               $lines = (file_exists($rootFolder . $pathEnv)) ? file($rootFolder . $pathEnv) : null;
               foreach($lines as $line){

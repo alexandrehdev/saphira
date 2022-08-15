@@ -19,22 +19,22 @@
 
     public static function selectAll(string $table_name) :array{
       $connection = self::getConnection();
-      $con        = $connection->getCon();
-      $stmt       = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
+      $con = $connection->getCon();
+      $stmt = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
       $stmt->execute();
-      $row        = $stmt->fetch(PDO::FETCH_ASSOC);
-      $response   = ($row == null) ? "no records found" : $row;
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $response = ($row == null) ? "no records found" : $row;
 
       return $response;  
     }
 
     public static function insertValues(string $table,array $cols, array $vals) :string{
-      $column     = "(". implode(",",$cols) . ")";
-      $values     = "(:". implode(", :", $cols) . ")";
-      $data       = array_combine($cols,$vals);
+      $column = "(". implode(",",$cols) . ")";
+      $values = "(:". implode(", :", $cols) . ")";
+      $data   = array_combine($cols,$vals);
       $connection = self::getConnection();
-      $con        = $connection->getCon();
-      $stmt       = $con->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
+      $con = $connection->getCon();
+      $stmt = $con->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
 
       $response   = ($stmt->execute($data)) ? DataActions::SUCCESS : DataActions::FAILED;
 
@@ -44,23 +44,23 @@
 
 
     public static function updateValues(string $table, array $cols, array $vals, array $cond) :string{
-      $vals      = array_map(function($item){
+      $vals = array_map(function($item){
          return "--$item--";
       },$vals);
-      $format   = array_combine($cols,$vals);
-      $format   = http_build_query($format,'',' , ');
-      $format   = str_replace("=", " = ",$format);
+      $format = array_combine($cols,$vals);
+      $format = http_build_query($format,'',' , ');
+      $format = str_replace("=", " = ",$format);
 
       foreach($vals as $val){
         $format = str_replace("--", " ' ", $format);
       }
 
-      $condition  = $cond[0] . " = " . $cond[1];
+      $condition = $cond[0] . " = " . $cond[1];
       $connection = self::getConnection();
-      $con        = $connection->getCon();
-      $stmt       = $con->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
+      $con = $connection->getCon();
+      $stmt = $con->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
  
-      $response   = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
+      $response = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
       
       return $response;
 
@@ -69,13 +69,13 @@
 
 
      public static function deleteValues(string $table, array $cond) :string{
-       $condition    = $cond[0] . " = " . "'$cond[1]'";
-       $connection   = self::getConnection();
-       $con          = $connection->getCon();
-       $stmt         = $con->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
-       $response     = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
+       $condition = $cond[0] . " = " . "'$cond[1]'";
+       $connection = self::getConnection();
+       $con = $connection->getCon();
+       $stmt = $con->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
+       $response = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
  
-      return $response;
+       return $response;
      }
 
 

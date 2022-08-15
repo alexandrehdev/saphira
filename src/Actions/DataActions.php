@@ -22,7 +22,7 @@
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
       $stmt->execute();
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
       $response = ($row == null) ? "no records found" : $row;
 
       return $response;  

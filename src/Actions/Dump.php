@@ -1,8 +1,7 @@
 <?php
 	namespace Saphira\Connectdb\Actions;
 
-	class Dump
-	{
+class Dump{
 
     
     /**

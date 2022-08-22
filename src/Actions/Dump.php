@@ -19,9 +19,18 @@
 
     }
 
+   /*function returns an specific content
+    * @param string $db
+    * @param string $table
+    * @param string $col
+    * @return string
+    */ 
+    public static function selectSpecific(string $db, string $table, string $col) :string{
 
+        return "SELECT {$col} FROM {$db}.{$table}";
 
-    
+    }
+
     /**
      * function responsible for return insert query
      *

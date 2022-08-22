@@ -28,6 +28,7 @@
       return $response;  
     }
 
+	    
     public static function selectBy(string $table, array $col){
       $cols = implode(", ", $col);
       $connection = self::getConnection();
@@ -37,6 +38,17 @@
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
       return $row;
     }
+	    
+	    
+    public static function selectByWhere(string $table, array $col, string $cond, string $val){
+      $cols = implode(", ", $col);
+      $connection = self::getConnection();
+      $con = $connection->getCon();
+      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
+      $stmt->execute();
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $row;
+    }  
 
 
     public static function insertValues(string $table,array $cols, array $vals) :string{

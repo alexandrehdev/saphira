@@ -1,5 +1,5 @@
 <?php
-	namespace Saphira\Connectdb\Actions;
+    namespace Saphira\Connectdb\Actions;
     use Saphira\Connectdb\Connect\Connection;
     use PDO;
 
@@ -36,6 +36,7 @@
       $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
+	    
       return $row;
     }
 	    
@@ -47,6 +48,7 @@
       $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
+	    
       return $row;
     }  
 

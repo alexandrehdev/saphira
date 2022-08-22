@@ -28,6 +28,15 @@
       return $response;  
     }
 
+    public static function selectBy(string $table_name, string $col){
+      $connection = self::getConnection();
+      $con = $connection->getCon();
+      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table_name, $col));
+      $stmt->execute();
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      var_dump($row);
+    }
+
     public static function insertValues(string $table,array $cols, array $vals) :string{
       $column = "(". implode(",",$cols) . ")";
       $values = "(:". implode(", :", $cols) . ")";

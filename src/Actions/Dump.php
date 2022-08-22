@@ -30,6 +30,13 @@
         return "SELECT {$col} FROM {$db}.{$table}";
 
     }
+		
+   
+    public static function selectSpecificWhere(string $db, string $table, string $col, string $fparam, string $val) :string{
+
+        return "SELECT {$col} FROM {$db}.{$table} WHERE {$fparam} = '{$val}'";
+
+    }
 
     /**
      * function responsible for return insert query

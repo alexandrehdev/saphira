@@ -35,6 +35,7 @@
       $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $row;
     }
 
 

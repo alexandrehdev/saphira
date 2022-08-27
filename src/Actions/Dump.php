@@ -1,8 +1,7 @@
 <?php
 	namespace Saphira\Connectdb\Actions;
 
-	class Dump
-	{
+class Dump{
 
     
     /**
@@ -28,6 +27,13 @@
     public static function selectSpecific(string $db, string $table, string $col) :string{
 
         return "SELECT {$col} FROM {$db}.{$table}";
+
+    }
+		
+   
+    public static function selectSpecificWhere(string $db, string $table, string $col, string $fparam, string $val) :string{
+
+        return "SELECT {$col} FROM {$db}.{$table} WHERE {$fparam} = '{$val}'";
 
     }
 

@@ -1,24 +1,17 @@
 <?php
-	namespace Saphira\Connectdb\Actions;
+    namespace Saphira\Connectdb\Actions;
     use Saphira\Connectdb\Connect\Connection;
     use PDO;
 
     class DataActions
 	{
 
-    const SUCCESS = "success";
-
-    const FAILED = "failed";
-
-
-    public static function getConnection(){
-
+    public function getConnection(){
       return new Connection();
-
     }
 
-    public static function selectAll(string $table_name) :array{
-      $connection = self::getConnection();
+    public function selectAll(string $table_name) :array{
+      $connection = $this->getConnection();
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
       $stmt->execute();
@@ -28,16 +21,32 @@
       return $response;  
     }
 
-    public static function selectBy(string $table_name, string $col){
-      $connection = self::getConnection();
+	    
+    public function selectBy(string $table, array $col){
+      $cols = implode(", ", $col);
+      $connection = $this->getConnection();
       $con = $connection->getCon();
-      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table_name, $col));
+      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
-      var_dump($row);
+	    
+      return $row;
     }
+	    
+	    
+    public function selectByWhere(string $table, array $col, string $cond, string $val){
+      $cols = implode(", ", $col);
+      $connection = self::getConnection();
+      $con = $connection->getCon();
+      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
+      $stmt->execute();
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+	    
+      return $row;
+    }  
 
-    public static function insertValues(string $table,array $cols, array $vals) :string{
+
+    public function insertValues(string $table,array $cols, array $vals) :string{
       $column = "(". implode(",",$cols) . ")";
       $values = "(:". implode(", :", $cols) . ")";
       $data   = array_combine($cols,$vals);
@@ -45,14 +54,14 @@
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
 
-      $response   = ($stmt->execute($data)) ? DataActions::SUCCESS : DataActions::FAILED;
+      $response   = ($stmt->execute($data)) ? "success" : "failed";
 
       return $response;
     }
 
 
 
-    public static function updateValues(string $table, array $cols, array $vals, array $cond) :string{
+    public function updateValues(string $table, array $cols, array $vals, array $cond) :string{
       $vals = array_map(function($item){
          return "--$item--";
       },$vals);
@@ -69,7 +78,7 @@
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
  
-      $response = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
+      $response = ($stmt->execute()) ? "success" : "failed";
       
       return $response;
 
@@ -77,12 +86,12 @@
 
 
 
-     public static function deleteValues(string $table, array $cond) :string{
+     public function deleteValues(string $table, array $cond) :string{
        $condition = $cond[0] . " = " . "'$cond[1]'";
        $connection = self::getConnection();
        $con = $connection->getCon();
        $stmt = $con->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
-       $response = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
+       $response = ($stmt->execute()) ? "success" : "failed";
  
        return $response;
      }

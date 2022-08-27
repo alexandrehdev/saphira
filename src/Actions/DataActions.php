@@ -6,19 +6,12 @@
     class DataActions
 	{
 
-    const SUCCESS = "success";
-
-    const FAILED = "failed";
-
-
-    public static function getConnection(){
-
+    public function getConnection(){
       return new Connection();
-
     }
 
-    public static function selectAll(string $table_name) :array{
-      $connection = self::getConnection();
+    public function selectAll(string $table_name) :array{
+      $connection = $this->getConnection();
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
       $stmt->execute();
@@ -29,9 +22,9 @@
     }
 
 	    
-    public static function selectBy(string $table, array $col){
+    public function selectBy(string $table, array $col){
       $cols = implode(", ", $col);
-      $connection = self::getConnection();
+      $connection = $this->getConnection();
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
       $stmt->execute();
@@ -41,7 +34,7 @@
     }
 	    
 	    
-    public static function selectByWhere(string $table, array $col, string $cond, string $val){
+    public function selectByWhere(string $table, array $col, string $cond, string $val){
       $cols = implode(", ", $col);
       $connection = self::getConnection();
       $con = $connection->getCon();
@@ -53,7 +46,7 @@
     }  
 
 
-    public static function insertValues(string $table,array $cols, array $vals) :string{
+    public function insertValues(string $table,array $cols, array $vals) :string{
       $column = "(". implode(",",$cols) . ")";
       $values = "(:". implode(", :", $cols) . ")";
       $data   = array_combine($cols,$vals);
@@ -61,14 +54,14 @@
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
 
-      $response   = ($stmt->execute($data)) ? DataActions::SUCCESS : DataActions::FAILED;
+      $response   = ($stmt->execute($data)) ? "success" : "failed";
 
       return $response;
     }
 
 
 
-    public static function updateValues(string $table, array $cols, array $vals, array $cond) :string{
+    public function updateValues(string $table, array $cols, array $vals, array $cond) :string{
       $vals = array_map(function($item){
          return "--$item--";
       },$vals);
@@ -85,7 +78,7 @@
       $con = $connection->getCon();
       $stmt = $con->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
  
-      $response = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
+      $response = ($stmt->execute()) ? "success" : "failed";
       
       return $response;
 
@@ -93,12 +86,12 @@
 
 
 
-     public static function deleteValues(string $table, array $cond) :string{
+     public function deleteValues(string $table, array $cond) :string{
        $condition = $cond[0] . " = " . "'$cond[1]'";
        $connection = self::getConnection();
        $con = $connection->getCon();
        $stmt = $con->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
-       $response = ($stmt->execute()) ? DataActions::SUCCESS : DataActions::FAILED;
+       $response = ($stmt->execute()) ? "success" : "failed";
  
        return $response;
      }

@@ -6,57 +6,56 @@
     class DataActions
 	{
 
-    public function getConnection(){
-      return new Connection();
+    public function getConnection() :object{
+        $connection = new Connection();
+        $response = $connection->getCon();
+
+        return $response;
     }
 
     public function selectAll(string $table_name) :array{
-      $connection = $this->getConnection();
-      $con = $connection->getCon();
-      $stmt = $con->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
-      $stmt->execute();
-      $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      $response = ($row == null) ? "no records found" : $row;
+       $connect = $this->getConnection();
+       $stmt = $connect->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
+       $stmt->execute();
+       $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+       $response = ($row == null) ? "no records found" : $row;
 
-      return $response;  
+       return $response;  
     }
 
 	    
     public function selectBy(string $table, array $col){
-      $cols = implode(", ", $col);
-      $connection = $this->getConnection();
-      $con = $connection->getCon();
-      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
-      $stmt->execute();
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+       $cols = implode(", ", $col);
+       $connect = $this->getConnection();
+       $stmt = $connect->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
+       $stmt->execute();
+       $row = $stmt->fetch(PDO::FETCH_ASSOC);
 	    
-      return $row;
+       return $row;
     }
 	    
 	    
     public function selectByWhere(string $table, array $col, string $cond, string $val){
-      $cols = implode(", ", $col);
-      $connection = self::getConnection();
-      $con = $connection->getCon();
-      $stmt = $con->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
-      $stmt->execute();
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+       $cols = implode(", ", $col);
+       $connect = self::getConnection();
+       $stmt = $connect->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
+       $stmt->execute();
+       $row = $stmt->fetch(PDO::FETCH_ASSOC);
 	    
-      return $row;
+       return $row;
     }  
 
 
     public function insertValues(string $table,array $cols, array $vals) :string{
-      $column = "(". implode(",",$cols) . ")";
-      $values = "(:". implode(", :", $cols) . ")";
-      $data   = array_combine($cols,$vals);
-      $connection = self::getConnection();
-      $con = $connection->getCon();
-      $stmt = $con->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
+       $column = "(". implode(",",$cols) . ")";
+       $values = "(:". implode(", :", $cols) . ")";
+       $data = array_combine($cols,$vals);
+       $connect = self::getConnection();
+       $stmt = $connect->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
 
-      $response   = ($stmt->execute($data)) ? "success" : "failed";
+       $response = ($stmt->execute($data)) ? "success" : "failed";
 
-      return $response;
+       return $response;
     }
 
 

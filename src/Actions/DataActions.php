@@ -37,7 +37,7 @@
 	    
     public function selectByWhere(string $table, array $col, string $cond, string $val){
        $cols = implode(", ", $col);
-       $connect = self::getConnection();
+       $connect = $this->getConnection();
        $stmt = $connect->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
        $stmt->execute();
        $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -50,7 +50,7 @@
        $column = "(". implode(",",$cols) . ")";
        $values = "(:". implode(", :", $cols) . ")";
        $data = array_combine($cols,$vals);
-       $connect = self::getConnection();
+       $connect = $this->getConnection();
        $stmt = $connect->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
 
        $response = ($stmt->execute($data)) ? "success" : "failed";
@@ -73,9 +73,8 @@
       }
 
       $condition = $cond[0] . " = " . $cond[1];
-      $connection = self::getConnection();
-      $con = $connection->getCon();
-      $stmt = $con->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
+      $connect = $this->getConnection();
+      $stmt = $connect->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
  
       $response = ($stmt->execute()) ? "success" : "failed";
       
@@ -87,9 +86,8 @@
 
      public function deleteValues(string $table, array $cond) :string{
        $condition = $cond[0] . " = " . "'$cond[1]'";
-       $connection = self::getConnection();
-       $con = $connection->getCon();
-       $stmt = $con->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
+       $connect = $this->getConnection();
+       $stmt = $connect->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
        $response = ($stmt->execute()) ? "success" : "failed";
  
        return $response;

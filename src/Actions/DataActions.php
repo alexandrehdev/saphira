@@ -1,98 +1,192 @@
 <?php
-    namespace Saphira\Connectdb\Actions;
-    use Saphira\Connectdb\Connect\Connection;
-    use PDO;
+namespace Saphira\Connectdb\Actions;
+use Saphira\Connectdb\Connect\Connection;
+use PDO;
+use Saphira\Connectdb\Common\Enviroment;
 
-    class DataActions
-	{
+ /**
+ * DataActions 
+ * 
+ * @package saphira 
+ * @version 1.2
+ * @copyright 2022 php developer
+ * @author alexandrehdev <github.com/alexandrehdev> 
+ * @license PHP Version 8.1 
+ */
 
-    public function getConnection() :object{
-        $connection = new Connection();
-        $response = $connection->getCon();
+ class DataActions{
 
-        return $response;
+
+    private $table;
+
+
+    private $columns = [];
+
+
+    private $values = [];
+
+
+    private $condition;
+
+
+    private $attribuition;
+
+
+
+    public function getTable() {
+        return $this->table;
     }
 
-    public function selectAll(string $table_name) :array{
+
+
+    public function setTable(string $table){
+        $this->table = $table;
+    }
+
+
+
+    public function getColumns(){
+        return $this->columns;
+    }
+
+
+
+    public function setColumns(){
+        $columns = func_get_args();
+        $this->columns = implode(",",$columns);
+    }
+
+
+
+    public function getValues(){
+        return $this->values;
+    }
+
+
+    public function setValues(){
+        $values = func_get_args();
+        $values = array_map(function($item){
+            return "'$item'";
+        },$values);
+        $this->values = implode(",", $values);
+    }
+
+
+    public function getCondition(){
+       return $this->condition;
+    }    
+
+
+    public function setCondition(string $condition){
+       $this->condition = $condition;
+    }
+
+
+    public function getAttribuition(){
+       return $this->attribuition;
+    }
+
+
+    public function setAttribuition(){
+      $attribuition = func_get_args(); 
+      $this->attribuition = implode(",", $attribuition);
+    }
+    
+
+    public function getConnection(){
+       return (new Connection())->getCon();
+    }
+
+
+    function __construct($currentDirectory){
+
+        Enviroment::load($currentDirectory);
+
+    }
+
+
+    public function selectAll(){
+       $search = ["#db#","#table#"];
+       $vals = [getenv("DB_NAME"), $this->table];
+       $templateQuery = Dump::getSelectAll();
+       $selectAllQuery = str_replace($search,$vals,$templateQuery);
        $connect = $this->getConnection();
-       $stmt = $connect->prepare(Dump::selectAll(getenv("DB_NAME"),$table_name));
+       $stmt = $connect->prepare($selectAllQuery);
        $stmt->execute();
        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
        $response = ($row == null) ? "no records found" : $row;
 
-       return $response;  
-    }
-
-	    
-    public function selectBy(string $table, array $col){
-       $cols = implode(", ", $col);
-       $connect = $this->getConnection();
-       $stmt = $connect->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table, $cols));
-       $stmt->execute();
-       $row = $stmt->fetch(PDO::FETCH_ASSOC);
-	    
-       return $row;
-    }
-	    
-	    
-    public function selectByWhere(string $table, array $col, string $cond, string $val){
-       $cols = implode(", ", $col);
-       $connect = $this->getConnection();
-       $stmt = $connect->prepare(Dump::selectSpecific(getenv("DB_NAME"),$table,$cols,$cond,$val));
-       $stmt->execute();
-       $row = $stmt->fetch(PDO::FETCH_ASSOC);
-	    
-       return $row;
-    }  
-
-
-    public function insertValues(string $table,array $cols, array $vals) :string{
-       $column = "(". implode(",",$cols) . ")";
-       $values = "(:". implode(", :", $cols) . ")";
-       $data = array_combine($cols,$vals);
-       $connect = $this->getConnection();
-       $stmt = $connect->prepare(Dump::insert(getenv("DB_NAME"),$table,$column,$values));
-
-       $response = ($stmt->execute($data)) ? "success" : "failed";
-
        return $response;
     }
 
 
+    public function selectBy() :array{
+       $templateQuery = Dump::getSelectSpecific();
+       $search = ["#db#","#table#","#cols#"];
+       $values = [getenv("DB_NAME"),$this->table,$this->columns];
+       $selectByQuery = str_replace($search,$values,$templateQuery);
+       $connect = $this->getConnection();
+       $stmt = $connect->prepare($selectByQuery);
+       $stmt->execute();
+       $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    public function updateValues(string $table, array $cols, array $vals, array $cond) :string{
-      $vals = array_map(function($item){
-         return "--$item--";
-      },$vals);
-      $format = array_combine($cols,$vals);
-      $format = http_build_query($format,'',' , ');
-      $format = str_replace("=", " = ",$format);
+       return $row;
+    }
 
-      foreach($vals as $val){
-        $format = str_replace("--", " ' ", $format);
-      }
 
-      $condition = $cond[0] . " = " . $cond[1];
-      $connect = $this->getConnection();
-      $stmt = $connect->prepare(Dump::update(getenv("DB_NAME"),$table,$format,$condition));
- 
-      $response = ($stmt->execute()) ? "success" : "failed";
       
-      return $response;
-
-     }
-
-
-
-     public function deleteValues(string $table, array $cond) :string{
-       $condition = $cond[0] . " = " . "'$cond[1]'";
+    public function selectColsWhere() :array{
+       $templateQuery = Dump::getSelectSpecificWhere();
+       $search = ["#db#","#table#","#cols#","#condition#"];
+       $values = [getenv("DB_NAME"),$this->table,$this->columns,$this->condition];
+       $selectColsWhereQuery = str_replace($search,$values,$templateQuery);
        $connect = $this->getConnection();
-       $stmt = $connect->prepare(Dump::delete(getenv("DB_NAME"),$table,$condition));
-       $response = ($stmt->execute()) ? "success" : "failed";
- 
-       return $response;
-     }
+       $stmt = $connect->prepare($selectColsWhereQuery);
+       $stmt->execute();
+       $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+       return $row;
+    }
+	
+
+    public function insertValues() :string{
+       $templateQuery = Dump::getInsertQuery();
+       $search = ["#db#","#table#","#cols#","#vals#"];
+       $values = [getenv("DB_NAME"),$this->table,$this->columns,$this->values];
+       $insertQuery = str_replace($search,$values,$templateQuery);
+       $connect = $this->getConnection();
+       $stmt = $connect->prepare($insertQuery);
+
+       return ($stmt->execute()) ? "success" : "fail";
+    }
 
 
 
-	}
+    public function updateValues() :string{
+        $templateQuery = Dump::getUpdateQuery();
+        $search = ["#db#","#table#","#atribuition#","#condition#"];
+        $values = [getenv("DB_NAME"),$this->table,$this->attribuition,$this->condition];
+        $updateQuery = str_replace($search,$values,$templateQuery);
+        $connect = $this->getConnection();
+        $stmt = $connect->prepare($updateQuery);
+        $stmt->execute();
+
+        return ($stmt->execute()) ? "success" : "fail";
+    }
+
+
+    public function deleteValues() :string{
+        $templateQuery = Dump::getDeleteQuery();
+        $search = ["#db#","#table#","#condition#"];
+        $values = [getenv("DB_NAME"),$this->table,$this->condition];
+        $deleteQuery = str_replace($search,$values,$templateQuery);
+        $connect = $this->getConnection();
+        $stmt = $connect->prepare($deleteQuery);
+        $stmt->execute();
+
+        return ($stmt->execute()) ? "success" : "fail";
+    }
+    
+
+
+}

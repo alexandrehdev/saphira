@@ -1,92 +1,48 @@
 <?php
-	namespace Saphira\Connectdb\Actions;
+namespace Saphira\Connectdb\Actions;
 
 class Dump{
-
     
-    /**
-     * function responsible for return select query
-     *
-     * @param string $db
-     * @param string $table
-     * @return string
-     */
     
-    public static function selectAll(string $db, string $table) :string{
+    public static function getSelectAll(){
 
-      return "SELECT * FROM {$db}.{$table}";
+        return "SELECT * FROM #db#.#table#";
 
     }
 
-   /*function returns an specific content
-    * @param string $db
-    * @param string $table
-    * @param string $col
-    * @return string
-    */ 
-    public static function selectSpecific(string $db, string $table, string $col) :string{
 
-        return "SELECT {$col} FROM {$db}.{$table}";
+    public static function getSelectSpecific(){
+
+        return "SELECT #cols# FROM #db#.#table#";
 
     }
 		
    
-    public static function selectSpecificWhere(string $db, string $table, string $col, string $fparam, string $val) :string{
+    public static function getSelectSpecificWhere(){
 
-        return "SELECT {$col} FROM {$db}.{$table} WHERE {$fparam} = '{$val}'";
-
-    }
-
-    /**
-     * function responsible for return insert query
-     *
-     * @param string $db
-     * @param string $table
-     * @param string $columns
-     * @param string $values
-     * @return string
-     */
-
-    public static function insert(string $db, string $table, string $columns, string $values) :string{
-
-        return "INSERT INTO {$db}.{$table} {$columns} VALUES {$values}";
+        return "SELECT #col# FROM #db#.#table# WHERE #param# = '#val#'";
 
     }
 
 
+    public static function getInsertQuery(){
 
-    /**
-     * function responsible for return update query
-     *
-     * @param string $db
-     * @param string $table
-     * @param string $columns
-     * @param string $condition
-     * @return void
-     */
-
-    public static function update(string $db, string $table, string $columns, string $condition) :string{
-
-      return "UPDATE {$db}.{$table} SET {$columns} WHERE {$condition}";
+        return "INSERT INTO #db#.#table# ( #cols# ) VALUES ( #vals# )";
 
     }
 
 
+    public static function update(){
 
-
-    /**
-     * function responsible for return delete query
-     *
-     * @param string $db
-     * @param string $table
-     * @param string $condition
-     * @return string
-     */ 
-
-    public static function delete(string $db, string $table, string $condition) :string{
-
-      return "DELETE FROM {$db}.{$table} WHERE {$condition}";
+      return "UPDATE #db#.#table# SET #col# WHERE #condition# = #iqual# ";
 
     }
 
-	}
+
+    public static function delete(){
+
+      return "DELETE FROM #db#.#table# WHERE #condition# = #iqual# ";
+
+    }
+
+}

@@ -4,22 +4,22 @@ namespace Saphira\Connectdb\Common;
 class Enviroment
 {
 
- public static function load($dir){
-      $rootFolder = $_SERVER["DOCUMENT_ROOT"];
-      $pathEnv =  "/vendor/saphira/connectdb/.env";
+    public static function load($dir){
 
-      for($x = 1; $x <= 30; $x++){
-          if($rootFolder == dirname($dir,$x)){
-            $lines = (file_exists($rootFolder . $pathEnv)) ? file($rootFolder . $pathEnv) : null;
-            foreach($lines as $line){
-               putenv(trim($line));
-            }
-              return ".env file 200";
+       $fileEnv =  "/.env";
+       if(file_exists($dir . $fileEnv)){
 
-              continue;
-            }
-        }
-    }
+          $lines = file($dir . $fileEnv);
+          foreach($lines as $line){
+              putenv(trim($line));
+          }
 
+          return ".env 200";
+
+       }else{
+          return ".env file not found";
+       }
+
+   }
 
  }

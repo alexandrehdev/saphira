@@ -20,28 +20,28 @@ class Dump{
    
     public static function getSelectSpecificWhere(){
 
-        return "SELECT #col# FROM #db#.#table# WHERE #param# = '#val#'";
+        return "SELECT #cols# FROM #db#.#table# WHERE #condition#";
 
     }
 
 
     public static function getInsertQuery(){
 
-        return "INSERT INTO #db#.#table# ( #cols# ) VALUES ( #vals# )";
+        return "INSERT INTO #db#.#table# (#cols#) VALUES (#vals#)";
 
     }
 
 
-    public static function update(){
+    public static function getUpdateQuery(){
 
-      return "UPDATE #db#.#table# SET #col# WHERE #condition# = #iqual# ";
+      return "UPDATE #db#.#table# SET #atribuition# WHERE #condition#";
 
     }
 
 
-    public static function delete(){
+    public static function getDeleteQuery(){
 
-      return "DELETE FROM #db#.#table# WHERE #condition# = #iqual# ";
+      return "DELETE FROM #db#.#table# WHERE #condition#";
 
     }
 

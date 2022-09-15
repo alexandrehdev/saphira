@@ -1,5 +1,6 @@
 <?php
 namespace Saphira\Connectdb\Actions;
+use Saphira\Connectdb\Actions\Dump;
 use Saphira\Connectdb\Connect\Connection;
 use PDO;
 use Saphira\Connectdb\Common\Enviroment;

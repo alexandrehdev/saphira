@@ -1,12 +1,14 @@
 <?php
 namespace Saphira\Connectdb\Common;
 
-use Exception;
 
 class Enviroment
 {
     
     private $env;
+
+
+    private static $instance = null;
 
 
 
@@ -15,17 +17,24 @@ class Enviroment
     }
 
 
+    public static function getInstance() :object{
+        if(self::$instance == null){
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+
+
 
     public static function load($dir){
-       $self = new Static;
+       $self = self::getInstance();
        $searchEnv = file_exists($dir . $self->env);
        $envs = ($searchEnv) ? file($dir . $self->env) : false;
 
        foreach($envs as $env){
-          $response = (!empty($env) ? putenv($env) : false);
+          return (!empty($env) ? putenv($env) : false);
        }
-
-       return $response;
     }
         
         

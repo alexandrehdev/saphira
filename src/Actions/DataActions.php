@@ -52,8 +52,7 @@ use Saphira\Connectdb\Common\Enviroment;
 
 
 
-    public function setColumns(){
-        $columns = func_get_args();
+    public function setColumns(string ...$columns){
         $this->columns = implode(",",$columns);
     }
 
@@ -64,12 +63,12 @@ use Saphira\Connectdb\Common\Enviroment;
     }
 
 
-    public function setValues(){
-        $values = func_get_args();
-        $values = array_map(function($item){
+    public function setValues(string ...$values){
+        $vals = array_map(function($item){
             return "'$item'";
         },$values);
-        $this->values = implode(",", $values);
+
+        $this->values = implode(",", $vals);
     }
 
 
@@ -88,9 +87,8 @@ use Saphira\Connectdb\Common\Enviroment;
     }
 
 
-    public function setAttribuition(){
-      $attribuition = func_get_args(); 
-      $this->attribuition = implode(",", $attribuition);
+    public function setAttribuition(string ...$attribuitions){
+      $this->attribuition = implode(",", $attribuitions);
     }
     
 

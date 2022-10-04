@@ -14,7 +14,7 @@ It'll do that by abstracting all the query stuff, and that means that you don't 
 
 
 
-`composer require saphira/connectdb:dev-master`
+`composer require saphira/connectdb`
 
 
 

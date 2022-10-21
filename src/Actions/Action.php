@@ -1,115 +1,33 @@
 <?php
+
 namespace Saphira\Connectdb\Actions;
-use Saphira\Connectdb\Actions\Dump;
+use Saphira\Connectdb\Actions\Build;
 use Saphira\Connectdb\Connect\Connection;
 use PDO;
-use Saphira\Connectdb\Common\Enviroment;
-
- /**
- * DataActions 
- * 
- * @package saphira 
- * @version 1.2
- * @copyright 2022 php developer
- * @author alexandrehdev <github.com/alexandrehdev> 
- * @license PHP Version 8.1 
- */
-
- class DataActions{
-
-
-    private $table;
-
-
-    private $columns = [];
-
-
-    private $values = [];
-
-
-    private $condition;
-
-
-    private $attribuition;
 
 
 
-    public function getTable() {
-        return $this->table;
+class Action extends Build
+{
+
+    private $connect;
+
+
+    public function __construct()
+    {
+        parent::__construct(getcwd());
+
+        $this->connect = new Connection;
     }
 
 
-
-    public function setTable(string $table){
-        $this->table = $table;
-    }
-
-
-
-    public function getColumns(){
-        return $this->columns;
-    }
-
-
-
-    public function setColumns(string ...$columns){
-        $this->columns = implode(",",$columns);
-    }
-
-
-
-    public function getValues(){
-        return $this->values;
-    }
-
-
-    public function setValues(string ...$values){
-        $vals = array_map(function($item){
-            return "'$item'";
-        },$values);
-
-        $this->values = implode(",", $vals);
-    }
-
-
-    public function getCondition(){
-       return $this->condition;
-    }    
-
-
-    public function setCondition(string $condition){
-       $this->condition = $condition;
-    }
-
-
-    public function getAttribuition(){
-       return $this->attribuition;
-    }
-
-
-    public function setAttribuition(string ...$attribuitions){
-      $this->attribuition = implode(",", $attribuitions);
-    }
-    
-
-    public function getConnection(){
-       return (new Connection())->getCon();
-    }
-
-
-    function __construct($currentDirectory){
-
-        Enviroment::load($currentDirectory);
-
-    }
-
-
-    public function selectAll(){
+    public function selectAll()
+    {
        $search = ["#db#","#table#"];
-       $vals = [getenv("DB_NAME"), $this->table];
+       $vals = [getenv("DB_NAME"), $this->getTable()];
        $templateQuery = Dump::getSelectAll();
        $selectAllQuery = str_replace($search,$vals,$templateQuery);
-       $connect = $this->getConnection();
+       $connect = $this->connect->getCon();
        $stmt = $connect->prepare($selectAllQuery);
        $stmt->execute();
        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -124,7 +42,7 @@ use Saphira\Connectdb\Common\Enviroment;
        $search = ["#db#","#table#","#cols#"];
        $values = [getenv("DB_NAME"),$this->table,$this->columns];
        $selectByQuery = str_replace($search,$values,$templateQuery);
-       $connect = $this->getConnection();
+       $connect = $this->connect->getCon();
        $stmt = $connect->prepare($selectByQuery);
        $stmt->execute();
        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -139,7 +57,7 @@ use Saphira\Connectdb\Common\Enviroment;
        $search = ["#db#","#table#","#cols#","#condition#"];
        $values = [getenv("DB_NAME"),$this->table,$this->columns,$this->condition];
        $selectColsWhereQuery = str_replace($search,$values,$templateQuery);
-       $connect = $this->getConnection();
+       $connect = $this->connect->getCon();
        $stmt = $connect->prepare($selectColsWhereQuery);
        $stmt->execute();
        $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -153,7 +71,7 @@ use Saphira\Connectdb\Common\Enviroment;
        $search = ["#db#","#table#","#cols#","#vals#"];
        $values = [getenv("DB_NAME"),$this->table,$this->columns,$this->values];
        $insertQuery = str_replace($search,$values,$templateQuery);
-       $connect = $this->getConnection();
+       $connect = $this->connect->getCon();
        $stmt = $connect->prepare($insertQuery);
 
        return ($stmt->execute()) ? "success" : "fail";
@@ -166,7 +84,7 @@ use Saphira\Connectdb\Common\Enviroment;
         $search = ["#db#","#table#","#atribuition#","#condition#"];
         $values = [getenv("DB_NAME"),$this->table,$this->attribuition,$this->condition];
         $updateQuery = str_replace($search,$values,$templateQuery);
-        $connect = $this->getConnection();
+        $connect = $this->connect->getCon();
         $stmt = $connect->prepare($updateQuery);
         $stmt->execute();
 
@@ -179,13 +97,14 @@ use Saphira\Connectdb\Common\Enviroment;
         $search = ["#db#","#table#","#condition#"];
         $values = [getenv("DB_NAME"),$this->table,$this->condition];
         $deleteQuery = str_replace($search,$values,$templateQuery);
-        $connect = $this->getConnection();
+        $connect = $this->connect->getCon();
         $stmt = $connect->prepare($deleteQuery);
         $stmt->execute();
 
         return ($stmt->execute()) ? "success" : "fail";
     }
-    
-
+     
 
 }
+
+

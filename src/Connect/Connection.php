@@ -1,18 +1,18 @@
 <?php
 namespace Saphira\Connectdb\Connect;
-use PDO;
 use PDOException;
+use PDO;
 
 class Connection{
 
 
 	private $con;
 
-	public function setCon($data) :void{
+	public function setCon($data){
 	    $this->con = $data;
 	}
 
-	public function getCon() :object{
+	public function getCon() {
 	    return $this->con;
 	}
 

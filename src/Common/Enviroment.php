@@ -5,6 +5,9 @@ namespace Saphira\Connectdb\Common;
 class Enviroment
 {
     
+    private $fileName;
+
+
     private $env;
 
 
@@ -13,7 +16,9 @@ class Enviroment
 
 
     public function __construct(){
-        $this->env = "/.env";
+
+        $this->fileName = "/.env";
+
     }
 
 
@@ -28,13 +33,16 @@ class Enviroment
 
 
     public static function load($dir){
-       $self = self::getInstance();
-       $searchEnv = file_exists($dir . $self->env);
-       $envs = ($searchEnv) ? file($dir . $self->env) : false;
+        $self = self::getInstance();
 
-       foreach($envs as $env){
-          return (!empty($env) ? putenv($env) : false);
-       }
+        if(file_exists($dir . $self->fileName)){
+            $self->env = file($dir . $self->fileName);
+
+            foreach($self->env as $env){
+               putenv($env);
+            } 
+        }
+
     }
         
         

@@ -11,7 +11,7 @@ It'll do that by abstracting all the query stuff, and that means that you don't 
 
 
 
-
+SELECT * FROM table_name;
 
 
 `composer require saphira/connectdb`
